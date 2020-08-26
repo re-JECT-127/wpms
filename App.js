@@ -7,39 +7,25 @@ import {
   View,
 } from 'react-native';
 import List from './components/List';
+import styles from './components/ListItem';
 
 
 const App = () => {
   return (
     <View style={styles.container}>
-      <List></List>
+      <List />
       <StatusBar style="auto" />
     </View>
   );
 };
 
-const styles = StyleSheet.create({
+/*const styles = StyleSheet.create({
   container: {
-    paddingTop: 37,
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  cats: {
-    padding: 10,
-    backgroundColor: 'grey',
-    flexDirection: 'row',
-  },
-  topic: {
-    fontSize: 30,
-  },
-  text: {
-    flex: 1,
-    padding: 20,
-    flexDirection: 'column',
-    alignSelf: 'center',
-  },
 });
-
+*/
 export default App;

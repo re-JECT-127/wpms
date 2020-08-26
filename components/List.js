@@ -1,13 +1,10 @@
 /* eslint-disable max-len */
 import React from 'react';
 import {
-  TouchableOpacity,
-  Text,
-  View,
   FlatList,
-  Image,
 } from 'react-native';
-import styles from '../../wpms2/App';
+import ListItem from './ListItem';
+
 
 const mediaArray = [
   {
@@ -43,23 +40,9 @@ const List = () => {
   return (
     <FlatList
       data={mediaArray}
-      renderItem={({item}) => {
-        return (
-          <TouchableOpacity>
-            <View style={styles.cats}>
-              <Image
-                style={{width: 100, height: 100}}
-                source={{uri: item.thumbnails.w160}}
-              />
-            </View>
-            <View style={styles.text}>
-              <Text>{item.title}</Text>
-              <Text>{item.description}</Text>
-            </View>
-          </TouchableOpacity>
-        );
-      }}
-    />);
+      renderItem={({item}) => <ListItem singleMedia={item} />}
+    />
+  );
 };
 
 export default List;
