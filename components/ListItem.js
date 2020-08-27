@@ -1,11 +1,14 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import Constants from 'expo-constants';
 import {
   StyleSheet,
   View,
   Text,
   Image,
   TouchableOpacity,
+  SafeAreaView,
+  SafeAreaProvider
 } from 'react-native';
 
 
@@ -28,12 +31,14 @@ const ListItem = (props) => {
 };
 
 const styles = StyleSheet.create({
+
   container: {
-    backgroundColor: "lightgrey",
+    backgroundColor: "lightgreen",
     flexDirection: "row",
-    padding: 15,
+    padding: 10,
     marginBottom: 5,
     borderRadius: 10,
+    paddingTop: Constants.statusBarHeight,
   },
   cats: {
     padding: 10,
@@ -49,13 +54,16 @@ const styles = StyleSheet.create({
     padding: 20,
     flexDirection: 'row',
     alignSelf: 'center',
+    position: "absolute",
   },
   imageContainer: {
     flex: 1,
+
   },
   image: {
     flex: 1,
-    borderRadius: 10,
+    borderRadius: 20,
+    resizeMode: "contain",
   },
   image2: {
     flex: 1,
