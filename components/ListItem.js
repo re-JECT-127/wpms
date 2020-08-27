@@ -29,30 +29,16 @@ const ListItem = (props) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "lightgrey",
-    flexDirection: "row",
-    padding: 15,
-    marginBottom: 5,
-    borderRadius: 10,
-  },
-  title: {
-    fontWeight: "bold",
-    fontSize: 20,
-    paddingBottom: 1,
-  },
   cats: {
     padding: 10,
-    backgroundColor: 'grey',
+    backgroundColor: 'lightblue',
     flexDirection: 'row',
-  },
-  topic: {
-    fontSize: 30,
+    flex:1,
   },
   text: {
     flex: 1,
-    padding: 20,
-    flexDirection: 'column',
+    padding: 10,
+    flexDirection: 'row',
     alignSelf: 'center',
   },
 });
