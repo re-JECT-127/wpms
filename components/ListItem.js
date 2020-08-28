@@ -62,8 +62,8 @@ const styles = StyleSheet.create({
   },
   image: {
     flex: 1,
-    borderRadius: 20,
-    resizeMode: "contain",
+    borderRadius: 60,
+    resizeMode: "stretch",
   },
   image2: {
     flex: 1,
