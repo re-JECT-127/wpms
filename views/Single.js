@@ -1,14 +1,13 @@
 import React from 'react';
-import {StyleSheet, SafeAreaView, Text} from 'react-native';
+import {StyleSheet, View, Text} from 'react-native';
 import PropTypes from 'prop-types';
 
 const mediaUrl = 'http://media.mw.metropolia.fi/wbma/uploads/';
 
 const Single = ({route}) => {
-  console.log('route', route)
   const{file} = route.params;
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <Text style={styles.title}>{file.title}</Text>
       <View style={styles.imagebox}>
         <Image
@@ -17,7 +16,7 @@ const Single = ({route}) => {
         />
         <Text style={styles.description}>{file.description}</Text>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 const styles = StyleSheet.create({
