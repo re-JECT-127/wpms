@@ -8,11 +8,11 @@ import {
 import List from '../components/List';
 import styles from '../components/ListItem';
 
-
-const Home = () => {
+const Home = (props) => {
+  const {navigation} = props;
   return (
     <View style={styles.container}>
-      <List />
+      <List navigation={navigation}/>
       <StatusBar style="auto" />
     </View>
   );
