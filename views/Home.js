@@ -1,30 +1,34 @@
-/* eslint-disable max-len */
-
 import {StatusBar} from 'expo-status-bar';
 import React from 'react';
 import {
-  View,
+  StyleSheet,
+  SafeAreaView,
 } from 'react-native';
 import List from '../components/List';
-import styles from '../components/ListItem';
+import PropTypes from 'prop-types';
 
-const Home = (props) => {
-  const {navigation} = props;
+
+const Home = ({navigation}) => {
+  // const {navigation} = props;
+  // const navigation = props.navigation;
   return (
-    <View style={styles.container}>
-      <List navigation={navigation}/>
+    <SafeAreaView style={styles.container}>
+      <List navigation={navigation} />
       <StatusBar style="auto" />
-    </View>
+    </SafeAreaView>
   );
 };
 
-/*const styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    paddingHorizontal: 10,
   },
 });
-*/
+
+Home.propTypes = {
+  navigation: PropTypes.object,
+};
+
+
 export default Home;
