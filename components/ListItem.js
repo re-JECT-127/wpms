@@ -10,7 +10,7 @@ import {
   SafeAreaView,
   SafeAreaProvider
 } from 'react-native';
-import {ListItem as NBListItem, Left, Thumbnail, Body, Right} from 'native-base';
+import {ListItem as NBListItem, Left, Thumbnail, Body, Right, Icon} from 'native-base';
 
 
 const mediaUrl = 'http://media.mw.metropolia.fi/wbma/uploads/';
@@ -34,6 +34,7 @@ const ListItem = ({navigation, singleMedia}) => {
           () => {
             navigation.navigate('Single', {file: singleMedia});
           }}>
+            <Icon name={'eye'}></Icon>
           <Text>View</Text>
         </Button>
       </Right>
