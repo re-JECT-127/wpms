@@ -1,19 +1,14 @@
 import React, {useContext, useEffect} from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  Button,
-} from 'react-native';
 import PropTypes from 'prop-types';
 import {AuthContext} from '../contexts/AuthContext';
 import AsyncStorage from '@react-native-community/async-storage';
 import {checkToken} from '../hooks/APIhooks';
 import LoginForm from '../components/LoginForm';
 import RegisterForm from '../components/RegisterForm';
+import {Title, Icon, Container, Content} from 'native-base';
 
 const Login = ({navigation}) => { // props is needed for navigation
-  const {setIsLoggedIn, setUser} = useContext(AuthContext);
+  const {setIsLoggedIn, setUser, user} = useContext(AuthContext);
   // console.log('Login', isLoggedIn);
 
   const getToken = async () => {
@@ -35,23 +30,21 @@ const Login = ({navigation}) => { // props is needed for navigation
     getToken();
   }, []);
 
+
+  console.log('Login.js', user);
+
   return (
-    <View style={styles.container}>
-      <Text>Login</Text>
-      <LoginForm navigation={navigation} />
-      <RegisterForm navigation={navigation} />
-    </View>
+    <Container>
+      <Content padder>
+        <Title>
+          <Icon name='planet' style={{fontSize: 200}} />
+        </Title>
+        <LoginForm navigation={navigation} />
+        <RegisterForm navigation={navigation} />
+      </Content>
+    </Container>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
 
 Login.propTypes = {
   navigation: PropTypes.object,
