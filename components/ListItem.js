@@ -3,15 +3,17 @@ import React from 'react';
 import Constants from 'expo-constants';
 import {
   StyleSheet,
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-  SafeAreaView,
-  SafeAreaProvider
 } from 'react-native';
-import {ListItem as NBListItem, Left, Thumbnail, Body, Right, Icon} from 'native-base';
-
+import {
+  ListItem as NBListItem,
+  Left,
+  Thumbnail,
+  Body,
+  Text,
+  Right,
+  Button,
+  Icon,
+} from 'native-base';
 
 const mediaUrl = 'http://media.mw.metropolia.fi/wbma/uploads/';
 
