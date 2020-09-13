@@ -97,10 +97,29 @@ const getAvatar = async () => {
   }
 };
 
+const checkAvailable = async (username) => {
+  try {
+    const response = await fetch(apiUrl + 'users/username/' + username);
+    const resultData = await response.json();
+    if (response.ok) {
+      if (resultData.available) {
+        return null;
+      } else {
+        return 'Username ' + username + ' is not available.';
+      }
+    } else {
+      throw new Error(resultData.message);
+    }
+  } catch (e) {
+    throw new Error(e.message);
+  }
+};
+
 export {
   useLoadMedia,
   postLogIn,
   checkToken,
   postRegistration,
   getAvatar,
+  checkAvailable,
 };
