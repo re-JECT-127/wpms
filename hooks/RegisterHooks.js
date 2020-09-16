@@ -100,6 +100,7 @@ const useSignUpForm = (callback) => {
     }, constraints);
 
     const fullNameError = validator('full_name', inputs.full_name, constraints);
+
     setRegisterErrors((registerErrors) => ({
       ...registerErrors,
       username: usernameError,
