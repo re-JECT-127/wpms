@@ -10,11 +10,13 @@ import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
 import {upload, postTag, appIdentifier} from '../hooks/APIhooks';
 import AsyncStorage from '@react-native-community/async-storage';
+import {Video} from 'expo-av';
 
 
 const Upload = ({navigation}) => {
   const [image, setImage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [fileType, setType] = useState('image');
 
   const doUpload = async () => {
     setIsLoading(true);
@@ -103,10 +105,19 @@ const Upload = ({navigation}) => {
     <Container>
       <Content padder>
         {image &&
+        <>
+        {fileType === 'image' ?
           <Image
             source={{uri: image}}
             style={{height: 400, width: null, flex: 1}}
+          />:
+          <Video
+          source={{uri: image}}
+          style={{height: 400, width: null, flex: 1}}
+          useNativeControls={true}
           />
+        }
+        </>
         }
         <Form>
           <FormTextInput
