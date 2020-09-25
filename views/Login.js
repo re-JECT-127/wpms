@@ -6,6 +6,7 @@ import {checkToken} from '../hooks/APIhooks';
 import LoginForm from '../components/LoginForm';
 import RegisterForm from '../components/RegisterForm';
 import {Title, Icon, Container, Content, Button, Text, View} from 'native-base';
+import {ScreenStackHeaderCenterView} from 'react-native-screens';
 
 const Login = ({navigation}) => { // props is needed for navigation
   const {setIsLoggedIn, setUser, user} = useContext(AuthContext);
@@ -38,7 +39,7 @@ const Login = ({navigation}) => { // props is needed for navigation
     <Container>
       <Content padder>
         <Title>
-          <Icon name='planet' style={{fontSize: 200}} />
+          <Icon name='planet' style={{fontSize: 200, alignItems: 'center'}} />
         </Title>
         {showRegistration ?
           <LoginForm navigation={navigation} /> :
@@ -49,7 +50,8 @@ const Login = ({navigation}) => { // props is needed for navigation
         </View>
         <Button block onPress={() => {
           setShowRegistration(!showRegistration);
-        }}>
+        }
+        }>
           <Text>{showRegistration ? 'Register' : 'Login'}</Text>
         </Button>
       </Content>
