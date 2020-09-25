@@ -16,7 +16,7 @@ import {Video} from 'expo-av';
 const Upload = ({navigation}) => {
   const [image, setImage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [fileType, setType] = useState('image');
+  const [fileType, setFileType] = useState('image');
 
   const doUpload = async () => {
     setIsLoading(true);
@@ -29,8 +29,10 @@ const Upload = ({navigation}) => {
       // lisätään tiedosto formDataan
       const filename = image.split('/').pop();
       const match = /\.(\w+)$/.exec(filename);
-      let type = match ? `image/${match[1]}` : `image`;
+      let type = match ? `${fileType}/${match[1]}` : fileType;
       if (type === 'image/jpg') type = 'image/jpeg';
+
+
       formData.append('file', {uri: image, name: filename, type});
       const userToken = await AsyncStorage.getItem('userToken');
       const resp = await upload(formData, userToken);
@@ -46,13 +48,19 @@ const Upload = ({navigation}) => {
       setTimeout(() => {
         doReset();
         navigation.push('Home');
+        setIsLoading(false);
       }, 2000);
-    }
-    catch (e) {
+    } catch (e) {
       console.log('upload error:', e.message);
-    } finally {
       setIsLoading(false);
     }
+    // Finally-haara toimisi muuten ookoo, mutta tässä tapauksessa asynkroninen
+    // setTimeout sotkee. Eli jos halutaan piilottaa spinneri vasta asetetun
+    // 2 sekunnin viiveen jälkeen, täytyy state muuttaa setTimeoutin yhteydessä
+    //
+    // } finally {
+    //   setIsLoading(false);
+    // }
   };
 
   const pickImage = async () => {
@@ -65,6 +73,7 @@ const Upload = ({navigation}) => {
       });
       if (!result.cancelled) {
         setImage(result.uri);
+        setFileType(result.type);
       }
 
       console.log(result);
@@ -105,19 +114,19 @@ const Upload = ({navigation}) => {
     <Container>
       <Content padder>
         {image &&
-        <>
-        {fileType === 'image' ?
-          <Image
-            source={{uri: image}}
-            style={{height: 400, width: null, flex: 1}}
-          />:
-          <Video
-          source={{uri: image}}
-          style={{height: 400, width: null, flex: 1}}
-          useNativeControls={true}
-          />
-        }
-        </>
+          <>
+            {fileType === 'image' ?
+              <Image
+                source={{uri: image}}
+                style={{height: 400, width: null, flex: 1}}
+              /> :
+              <Video
+                source={{uri: image}}
+                style={{height: 400, width: null, flex: 1}}
+                useNativeControls={true}
+              />
+            }
+          </>
         }
         <Form>
           <FormTextInput

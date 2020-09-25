@@ -11,13 +11,64 @@ import {
   Content,
   Container,
 } from 'native-base';
+import {Video} from 'expo-av';
+import {getUser} from '../hooks/APIhooks';
+import AsyncStorage from '@react-native-community/async-storage';
+import * as ScreenOrientation from 'expo-screen-orientation';
 
 const mediaUrl = 'http://media.mw.metropolia.fi/wbma/uploads/';
-const [image, setImage] = useState(null);
-const [fileType, setType] = useState('image');
+
 const Single = ({route}) => {
+  const [error, setError] = useState(false);
+  const [owner, setOwner] = useState({});
+  const [videoRef, setVideoRef] = useState(null);
   const {file} = route.params;
-  console.log('kuva', mediaUrl + file.filename);
+
+  const handleVideoRef = (component) => {
+    setVideoRef(component);
+  };
+
+  const showVideoInFullscreen = () => {
+    console.log('svifs', videoRef);
+    try {
+      videoRef.presentFullscreenPlayer();
+    } catch (e) {
+      console.log('svifs error', e.message);
+    }
+  };
+
+  const unlock = async () => {
+    await ScreenOrientation.unlockAsync();
+  };
+
+  const lock = async () => {
+    await ScreenOrientation.lockAsync(
+      ScreenOrientation.OrientationLock.PORTRAIT_UP,
+    );
+  };
+
+  const fetchOwner = async () => {
+    const userToken = await AsyncStorage.getItem('userToken');
+    setOwner(await getUser(file.user_id, userToken));
+  };
+
+  useEffect(() => {
+    unlock();
+    fetchOwner();
+
+    ScreenOrientation.addOrientationChangeListener((evt) => {
+      console.log('orientation', evt);
+      if (evt.orientationInfo.orientation > 2) {
+        showVideoInFullscreen();
+      }
+    });
+
+    return () => {
+      lock();
+    };
+  }, [videoRef]);
+
+  console.log('kuva', mediaUrl + file.filename, videoRef);
   return (
     <Container>
       <Content padder>
@@ -30,27 +81,37 @@ const Single = ({route}) => {
           </CardItem>
           <CardItem cardBody>
             <>
-            {fileType === 'image' ?
-            <Image source={{uri: mediaUrl + file.filename}}
-              style={{height: 400, width: null, flex: 1}}
-            />:
-            <Video
-            source={{uri: image}}
-            style={{height: 400, width: null, flex: 1}}
-            useNativeControls={true}
-            rate={1.0}
-            volume={1.0}
-            isMuted={false}
-            resizedMode='cover'
-            shouldPlay
-            isLooping
-            />
-          }
-          </>
+              {file.media_type === 'image' ?
+                <Image
+                  source={{uri: mediaUrl + file.filename}}
+                  style={{height: 400, width: null, flex: 1}}
+                /> :
+                <Video
+                  ref={handleVideoRef}
+                  source={{
+                    uri:
+                      error ? 'http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4' :
+                        mediaUrl + file.filename,
+                  }}
+                  style={{height: 400, width: null, flex: 1}}
+                  useNativeControls={true}
+                  resizeMode="cover"
+                  posterSource={{uri:mediaUrl + file.screenshot}}
+                  usePoster={true}
+                  onError={(err) => {
+                    console.log('video error', err);
+                    setError(true);
+                  }}
+                />
+              }
+            </>
           </CardItem>
-          <CardItem>
+          <CardItem style={{flexDirection: 'column'}}>
             <Text>
               {file.description}
+            </Text>
+            <Text>
+              By: {owner.username}
             </Text>
           </CardItem>
         </Card>

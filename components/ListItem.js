@@ -1,9 +1,5 @@
-import PropTypes from 'prop-types';
 import React from 'react';
-import Constants from 'expo-constants';
-import {
-  StyleSheet,
-} from 'react-native';
+import PropTypes from 'prop-types';
 import {
   ListItem as NBListItem,
   Left,
@@ -14,11 +10,26 @@ import {
   Button,
   Icon,
 } from 'native-base';
+import {deleteFile} from '../hooks/APIhooks';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const mediaUrl = 'http://media.mw.metropolia.fi/wbma/uploads/';
 
+const ListItem = ({navigation, singleMedia, editable}) => {
+  const doDelete = async () => {
+    try {
+      const userToken = await AsyncStorage.getItem('userToken');
+      const result = await deleteFile(singleMedia.file_id, userToken);
+      console.log('delete a file', result);
+      navigation.replace('MyFiles');
+      // TODO: prompt user before deleting
+      // https://reactnative.dev/docs/alert
+    }
+    catch (e) {
+      console.error(e);
+    }
+  };
 
-const ListItem = ({navigation, singleMedia}) => {
   return (
     <NBListItem thumbnail>
       <Left>
@@ -36,42 +47,32 @@ const ListItem = ({navigation, singleMedia}) => {
           () => {
             navigation.navigate('Single', {file: singleMedia});
           }}>
-            <Icon name={'eye'}></Icon>
+          <Icon name={'eye'}></Icon>
           <Text>View</Text>
         </Button>
+        {editable && <>
+          <Button success transparent onPress={
+            () => {
+              navigation.navigate('Modify', {file: singleMedia});
+            }}>
+            <Icon name={'create'}></Icon>
+            <Text>Modify</Text>
+          </Button>
+          <Button danger transparent onPress={doDelete}>
+            <Icon name={'trash'}></Icon>
+            <Text>Delete</Text>
+          </Button>
+        </>
+        }
       </Right>
     </NBListItem>
   );
 };
 
-const styles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    padding: 15,
-    marginBottom: 5,
-    backgroundColor: '#eee',
-    borderRadius: 16,
-  },
-  imagebox: {
-    flex: 1,
-  },
-  image: {
-    flex: 1,
-    borderRadius: 16,
-  },
-  textbox: {
-    flex: 2,
-    padding: 10,
-  },
-  listTitle: {
-    fontWeight: 'bold',
-    fontSize: 20,
-    paddingBottom: 15,
-  },
-});
-
 ListItem.propTypes = {
   singleMedia: PropTypes.object,
   navigation: PropTypes.object,
+  editable: PropTypes.bool,
 };
-export default ListItem
+
+export default ListItem;

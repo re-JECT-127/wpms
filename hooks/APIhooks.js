@@ -1,11 +1,10 @@
 import axios from 'axios';
 import {useState, useEffect} from 'react';
-import Profile from '../views/Profile';
 
 const apiUrl = 'http://media.mw.metropolia.fi/wbma/';
 const appIdentifier = 'masanID12345';
 
-const useLoadMedia = () => {
+const useLoadMedia = (all, userId) => {
   const [mediaArray, setMediaArray] = useState([]);
 
   const loadMedia = async () => {
@@ -13,13 +12,21 @@ const useLoadMedia = () => {
       // const response = await fetch(apiUrl + 'media');
       const response = await fetch(apiUrl + 'tags/' + appIdentifier);
       const json = await response.json();
-      const media = await Promise.all(json.map(async (item) => {
+      let media = await Promise.all(json.map(async (item) => {
         const resp2 = await fetch(apiUrl + 'media/' + item.file_id);
         const json2 = await resp2.json();
         return json2;
       }));
       // console.log('loadMedia', media);
-      setMediaArray(media);
+      if (all) {
+        console.log('all media', media);
+        setMediaArray(media);
+      } else {
+        media = media.filter((item) => {
+          return item.user_id == userId;
+        });
+        setMediaArray(media);
+      }
     } catch (e) {
       console.error(e);
     }
@@ -90,7 +97,7 @@ const checkToken = async (token) => {
 
 const getAvatar = async () => {
   try {
-    const response = await fetch(apiUrl + 'tags/avatar_');
+    const response = await fetch(apiUrl + 'tags/avatar_6');
     const avatarImages = await response.json();
     if (response.ok) {
       return avatarImages;
@@ -137,7 +144,52 @@ const upload = async (fd, token) => {
   }
 };
 
-// Post tag to server
+
+// Update a file
+const updateFile = async (fileId, fileInfo, token) => {
+  const options = {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-access-token': token,
+    },
+    body: JSON.stringify(fileInfo),
+  };
+  try {
+    const response = await fetch(apiUrl + 'media/' + fileId, options);
+    const result = await response.json();
+    if (response.ok) {
+      return result;
+    } else {
+      throw new Error(result.message);
+    }
+  } catch (e) {
+    throw new Error(e.message);
+  }
+};
+
+// Delete a file
+const deleteFile = async (fileId, token) => {
+  const options = {
+    method: 'DELETE',
+    headers: {
+      'x-access-token': token,
+    },
+  };
+  try {
+    const response = await fetch(apiUrl + 'media/' + fileId, options);
+    const result = await response.json();
+    if (response.ok) {
+      return result;
+    } else {
+      throw new Error(result.message);
+    }
+  } catch (e) {
+    throw new Error(e.message);
+  }
+  // http://media.mw.metropolia.fi/wbma/docs/#api-Media-DeleteMediaFile
+};
+
 const postTag = async (tag, token) => {
   const options = {
     method: 'POST',
@@ -161,6 +213,28 @@ const postTag = async (tag, token) => {
   // http://media.mw.metropolia.fi/wbma/docs/#api-Tag-PostTag
 };
 
+// get user info
+const getUser = async (id, token) => {
+  const options = {
+    headers: {
+      'Content-Type': 'application/json',
+      'x-access-token': token,
+    },
+  };
+  try {
+    const response = await fetch(apiUrl + 'users/' + id, options);
+    const result = await response.json();
+    if (response.ok) {
+      return result;
+    } else {
+      throw new Error(result.message);
+    }
+  } catch (e) {
+    throw new Error(e.message);
+  }
+  // http://media.mw.metropolia.fi/wbma/docs/#api-Tag-PostTag
+};
+
 export {
   useLoadMedia,
   postLogIn,
@@ -169,6 +243,9 @@ export {
   getAvatar,
   checkAvailable,
   upload,
+  updateFile,
+  deleteFile,
   postTag,
+  getUser,
   appIdentifier,
 };
